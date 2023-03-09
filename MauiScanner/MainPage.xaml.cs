@@ -1,24 +1,29 @@
-﻿namespace MauiScanner;
+﻿using ZXing.Net.Maui.Controls;
+using ZXing.Net.Maui;
+
+namespace MauiScanner;
 
 public partial class MainPage : ContentPage
 {
-	int count = 0;
 
-	public MainPage()
-	{
-		InitializeComponent();
-	}
+    public MainPage()
+    {
+        InitializeComponent();
 
-	private void OnCounterClicked(object sender, EventArgs e)
-	{
-		count++;
+        cameraBarcodeReaderView.Options = new BarcodeReaderOptions
+        {
+            Formats = BarcodeFormats.OneDimensional,
+            AutoRotate = true,
+            Multiple = true
+        };
+    }
 
-		if (count == 1)
-			CounterBtn.Text = $"Clicked {count} time";
-		else
-			CounterBtn.Text = $"Clicked {count} times";
+    protected void BarcodesDetected(object sender, BarcodeDetectionEventArgs e)
+    {
+        foreach (var barcode in e.Results)
+            Console.WriteLine($"Barcodes: {barcode.Format} -> {barcode.Value}");
+    }
 
-		SemanticScreenReader.Announce(CounterBtn.Text);
-	}
+
 }
 
